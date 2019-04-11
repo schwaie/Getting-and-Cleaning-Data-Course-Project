@@ -1,6 +1,6 @@
 # CodeBook for Course Project: Getting and Cleaning Data
 
-##Introduction
+## Introduction
 The raw data obtained represents data collected from the accelerometers from the Samsung Galaxy S smartphone. The README file contains additional information on the data, and a full description is available at the site where the data was obtained:
 
 http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
@@ -9,16 +9,16 @@ The actual raw data can be found here:
 
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 
-##Data
+## Data
 
 tidy_data.txt is a text file that contains the tidy data of the average of each variable for each activity and subject from raw data collected from the accelerometers from the Samsung Galaxy S smartphone. 
  
 The first row contains the variables (see variables section of this document), and the following rows contain the values of these variables. 
 
-##Variables
+## Variables
 Each row contains, for a given subject and activity, 86 averaged signal measurements.
 
-###Identifiers
+### Identifiers
 ```subject```
 integer, ranges from 1 to 30
 
@@ -49,7 +49,7 @@ Frequency-domain signals (```Frequency```) are variables resulting from the appl
 
 ```X```, ```Y```, ```Z``` in variable names are used to denote 3-axial signals in the X, Y and Z directions.
 
-##Transformations
+## Transformations
 
 The raw data can be found in the following ZIP file:
 
