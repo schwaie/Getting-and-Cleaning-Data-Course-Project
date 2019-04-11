@@ -22,57 +22,66 @@ activity <- rbind(activityTest, activityTrain)
 data <- rbind(dataTest, dataTrain)
 
 #set names
-names(subject) <-c("subject")
-names(activity) <-c("activity")
+colnames(subject) <- "Subject"
+colnames(activity) <-"Activity"
 names(data) <- features$V2
 
 #bind test and train data
-dataCombine <- cbind(subject, activity)
-mergedData <- cbind(dataCombine, data)
+mergedData <- cbind(subject, activity, data)
 
-##select data with only mean and std values
-namesMeanStd <-features$V2[grep("mean|std", features$V2)]
+##Extract the column indices that have either mean or std in them.
+mergedDataMeanStd <-grep(".*Mean.*|.*Std.*")
 
-##subset data frame by selected features
-selectedNames <- c("subject", "activity", as.character(namesMeanStd))
-subsetData <- subset(mergedData, select = selectedNames)
+##add activity and subject columns to the list
+requiredColumns <- c(mergedDataMeanStd, 1, 2)
 
-##turn activity labels into descriptive factors
-mergedData$activity <- factor(mergedData$activity, levels = activityLabels[,1], 
-                           labels = activityLabels[,2])
+##extract the data using the requiredColumns vector
+extractedData <- mergedData[ ,requiredColumns]
 
-##turn subject column into factor
-mergedData$subject <- as.factor(mergedData$subject)
+##change class of Activity column to character
+extractedData$Activity <- as.character(extractdData$Activity)
 
-##Appropriately labels the data set with descriptive variable names
-##get column names
-mergedDataCols <- colnames(mergedData)
+##change numbers in Activity to the labels in activityLabels
+for (i in 1:6) {
+        extractedData$Activity[extractedData$Activity == i] <- as.character(activityLabels[i,2])
+}
 
-##remove special characters
-mergedDataCols <- gsub("[\\(\\)-]", "", mergedDataCols)
+##now change class of $Activity to factor
+> extractedData$Activity <- as.factor(extractedData$Activity)
+
+##make data tidy:
+##Acc to Accelerometer, 
+##Gyro to Gyroscope, 
+##BodyBody to Body, 
+##Mag to Magnitude,
+##f to Frequency, 
+##t to Time
+##tBody to TimeBody
+##mean() to Mean
+##std() to StandardDeviation
+##-freq() to Frequency
+##angle to Angle
+##gravity to Gravity
 
 ##change column names
-mergedDataCols <- gsub("^f", "frequency", mergedDataCols)
-mergedDataCols <- gsub("^t", "time", mergedDataCols)
-mergedDataCols <- gsub("Acc", "Accelerometer", mergedDataCols)
-mergedDataCols <- gsub("Gyro", "Gyroscope", mergedDataCols)
-mergedDataCols <- gsub("Mag", "Magnitude", mergedDataCols)
-mergedDataCols <- gsub("Freq", "Frequency", mergedDataCols)
-mergedDataCols <- gsub("BodyBody", "Body", mergedDataCols)
+names(extractedData)<-gsub("Acc", "Accelerometer", names(extractedData))
+names(extractedData)<-gsub("Gyro", "Gyroscope", names(extractedData))
+names(extractedData)<-gsub("BodyBody", "Body", names(extractedData))
+names(extractedData)<-gsub("Mag", "Magnitude", names(extractedData))
+names(extractedData)<-gsub("^t", "Time", names(extractedData))
+names(extractedData)<-gsub("^f", "Frequency", names(extractedData))
+names(extractedData)<-gsub("tBody", "TimeBody", names(extractedData))
+names(extractedData)<-gsub("-mean()", "Mean", names(extractedData), ignore.case = TRUE)
+names(extractedData)<-gsub("-std()", "STD", names(extractedData), ignore.case = TRUE)
+names(extractedData)<-gsub("-freq()", "Frequency", names(extractedData), ignore.case = TRUE)
+names(extractedData)<-gsub("angle", "Angle", names(extractedData))
+names(extractedData)<-gsub("gravity", "Gravity", names(extractedData))
 
-#add new column names to merged data 
-colnames(mergedData) <- mergedDataCols
+##set $subject as a factor
+extractedData$Subject <- as.factor(extractedData$Subject)
+extractedData <- data.table(extractedData)
 
-
-##create a second, independent tidy data set with the average of each variable 
-##for each activity and each subject.
-
-##group by subject and activity
-library(plyr)
-finalData <- aggregate(. ~subject + activity, mergedData, mean)
-finalData <- finalData[order(finalData$subject, finalData$activity), ]
-
-##write table
-write.table(finalData, file = "tidydata.txt", row.name = FALSE)
-
-
+#Create tidy data set with the average of each activity and subject,write it into data file
+tidyData <- aggregate(. ~Subject + Activity, extractedData, mean)
+tidyData <- tidyData[order(tidyData$Subject,tidyData$Activity),]
+write.table(tidyData, file = "Tidydata.txt", row.names = FALSE)
