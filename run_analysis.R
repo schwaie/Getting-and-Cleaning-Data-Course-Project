@@ -57,7 +57,6 @@ mergedDataCols <- gsub("^t", "time", mergedDataCols)
 mergedDataCols <- gsub("Acc", "Accelerometer", mergedDataCols)
 mergedDataCols <- gsub("Gyro", "Gyroscope", mergedDataCols)
 mergedDataCols <- gsub("Mag", "Magnitude", mergedDataCols)
-mergedDataCols <- gsub("Acc", "Accelerometer", mergedDataCols)
 mergedDataCols <- gsub("Freq", "Frequency", mergedDataCols)
 mergedDataCols <- gsub("BodyBody", "Body", mergedDataCols)
 
